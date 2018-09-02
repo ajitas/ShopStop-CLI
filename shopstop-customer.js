@@ -1,6 +1,30 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
+var Chalk = require("chalk");
+var CFonts = require("cfonts");
+
+//usinf cfonts, the game heading is styled and displayed on terminal
+CFonts.say('SHOPSTOP', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: ['cyan','blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
+CFonts.say('===========', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: [,'blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -16,6 +40,7 @@ connection.connect(function (err) {
 });
 
 function askForShopping(){
+    console.log("\n");
     inquirer.prompt([{
         message:"Would you like to shop?",
         type:"confirm",
@@ -28,8 +53,10 @@ function askForShopping(){
 
                 if(err) throw err;
 
-                if(res.length === 0)
-                    console.log("No Products in catalog");
+                if(res.length === 0){
+                    console.log(Chalk.red("No Products in catalog, wait for manager to add new product"));
+                    connection.end();
+                }
                 else{
                     var table = new Table({
                         //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
@@ -67,7 +94,7 @@ function askForShopping(){
                             if(err) throw err;
 
                             if(res.length === 0){
-                                console.log("Invalid Product ID");
+                                console.log(Chalk.red("Invalid Product ID"));
                                 askForShopping();
                             }
                             else{
@@ -106,18 +133,35 @@ function checkForStockSufficiency(productID,quantity){
         if(err) throw err;
 
         if(res.length === 0){
-            console.log("Invalid Product ID");
+            console.log(Chalk.red("Invalid Product ID"));
             askForShopping();
         }
         else{
             if(res[0].stock_quantity < quantity){
-                console.log("Insufficient Stock: Only "+res[0].stock_quantity+" left in stock")
+                console.log(Chalk.red("Insufficient Stock: Only "+res[0].stock_quantity+" left in stock"));
                 askForShopping();
             }
             else{
                 var updatedStock = res[0].stock_quantity - quantity;
                 var newProductSale = res[0].product_sales + res[0].price * quantity;
-                placeOrder(productID,quantity,updatedStock,newProductSale);
+                console.log("================================")
+                console.log("Product: "+ res[0].product_name)
+                console.log("Department: "+ res[0].department_name)
+                console.log("Total Price: "+ (res[0].price * quantity).toFixed(2));
+                console.log("================================")
+
+                inquirer.prompt([{
+                    message:"Are you sure you want to place the order?",
+                    type:"confirm",
+                    name:"doBuy",
+                    default:false
+                }]).then(function(answer){
+                    if(answer.doBuy)
+                        placeOrder(productID,quantity,updatedStock,newProductSale);
+                    else
+                        askForShopping();
+                });
+                
             }
         }
     });
@@ -136,7 +180,7 @@ function placeOrder(productID, quantity, updatedStock, newProductSale){
         if(res.affectedRows === 1)
             showOrderMessage(productID,quantity);
         else{
-            console.log("Sorry! Could not place your order due to technical issue, Try again!")
+            console.log(Chalk.red("Sorry! Could not place your order due to technical issue, Try again!"));
             askForShopping();
         }
     });
@@ -149,7 +193,7 @@ function showOrderMessage(productID,quantity){
     }],
     function(err,res){
         if(err) throw err;
-        console.log("Your order of "+ quantity+ " "+res[0].product_name + " was successfully placed for $"+ (res[0].price*quantity).toFixed(2)+" !!")
+        console.log(Chalk.green.bold("Your order of "+ quantity+ " "+res[0].product_name + " was successfully placed for $"+ (res[0].price*quantity).toFixed(2)+" !!"))
         askForShopping();
     });
 }

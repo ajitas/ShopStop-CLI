@@ -14,7 +14,7 @@ create table products(
 
 create table departments(
     department_id integer auto_increment not null,
-    department_name varchar(30),
+    department_name varchar(30) not null,
     over_head_costs decimal (10,2) not null,
     primary key(department_id)
 );

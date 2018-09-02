@@ -1,7 +1,30 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
+var Chalk = require("chalk");
+var CFonts = require("cfonts");
 
+//usinf cfonts, the game heading is styled and displayed on terminal
+CFonts.say('SHOPSTOP', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: ['cyan','blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
+CFonts.say('===========', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: [,'blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -15,6 +38,7 @@ connection.connect(function (err) {
 });
 
 function askForOptions(){
+    console.log("\n");
     inquirer.prompt([{
         message:"What would you like to do?",
         name:"action",
@@ -43,7 +67,7 @@ function displayProducts(){
                         if(err) throw err;
 
                         if(res.length === 0)
-                            console.log("No Products in catalog");
+                            console.log(Chalk.red("No Products in catalog"));
                         else{
                                 var table = new Table({
                                     //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
@@ -71,7 +95,7 @@ function displayLowInventory(){
                         if(err) throw err;
 
                         if(res.length === 0)
-                            console.log("No Products in catalog");
+                            console.log(Chalk.red("No Product in catalog has low inventory"));
                         else{
                                 var table = new Table({
                                     //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
@@ -103,9 +127,14 @@ function addNewProduct(){
     });
 }
 function getNewProductDetails(product_name){
-    connection.query("select department_name from products group by department_name", function(err,res){
+    connection.query("select department_name from departments", function(err,res){
         if(err) throw err;
         var departmentArray = [];
+
+        if(res.length === 0){
+            console.log(Chalk.red("No department exists yet, wait for supervisor to add new department"));
+            askForOptions();
+        }
         for(var i =0;i<res.length;i++)
             departmentArray.push(res[i].department_name);
 
@@ -151,10 +180,12 @@ function getNewProductDetails(product_name){
                 return true;
             }
         }]).then(function(answer){
+            console.log("================================")
             console.log("Product: "+ product_name)
             console.log("Department: "+ answer.department)
             console.log("Price: "+ parseFloat(answer.price).toFixed(2))
             console.log("Stock: "+ parseInt(answer.stock));
+            console.log("================================")
 
             inquirer.prompt([{
                 message:"Are you sure you want to add the product?",
@@ -180,7 +211,7 @@ function insertNewProductToDatabase(product_name, department, price, stock){
                         stock_quantity:stock
                     }],function(err,res){
                         if(err) throw err;
-                        console.log(product_name + " added to ShopStop!!\n")
+                        console.log(Chalk.green.bold("Product "+product_name + " added to ShopStop!!\n"));
                         askForOptions();
                     });
 }
@@ -191,8 +222,10 @@ function addInventory(){
 
                 if(err) throw err;
 
-                if(res.length === 0)
-                    console.log("No Products in catalog, Select Add a Product");
+                if(res.length === 0){
+                    console.log(Chalk.red("No Products in catalog, Select Add a Product"));
+                    askForOptions();
+                }
                 else{
                     var table = new Table({
                         //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
@@ -230,7 +263,7 @@ function addInventory(){
                             if(err) throw err;
 
                             if(res.length === 0){
-                                console.log("Invalid Product ID");
+                                console.log(Chalk.red("Invalid Product ID"));
                                 askForOptions();
                             }
                             else{
@@ -247,6 +280,11 @@ function addInventory(){
                                         return true;
                                     }
                                 }]).then(function(answer2){
+                                    console.log("================================")
+                                    console.log("Product: "+ res[0].product_name)
+                                    console.log("Added Inventory: "+ parseInt(answer2.quantity));
+                                    console.log("================================")
+
                                     inquirer.prompt([{
                                         message:"Are you sure you want to add the inventory?",
                                         name:"doAdd",
@@ -276,7 +314,7 @@ function updateInventoryInDatabase(product_id,product_name, newStock, addedStock
     }],
     function(err, res){
         if(err) throw err;
-        console.log(addedStock+" " +product_name +" added to inventory!!!");
+        console.log(Chalk.green.bold(addedStock+" " +product_name +" added to inventory!!!"));
         askForOptions();
     });
 }

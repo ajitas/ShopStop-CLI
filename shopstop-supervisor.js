@@ -1,6 +1,30 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var Table = require('cli-table');
+var Chalk = require("chalk");
+var CFonts = require("cfonts");
+
+//usinf cfonts, the game heading is styled and displayed on terminal
+CFonts.say('SHOPSTOP', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: ['cyan','blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
+CFonts.say('===========', {
+    font: 'chrome',                  // define the font face
+    align: 'center',                // define text alignment
+    colors: [,'blueBright'],  // define all colors
+    background: 'transparent',      // define the background color, you can also use `backgroundColor` here as key
+    letterSpacing: 1,               // define letter spacing
+    lineHeight: 1,                  // define the line height
+    space: false,                    // define if the output text should have empty lines on top and on the bottom
+    maxLength: 20,                  // define how many character can be on one line
+});
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -20,8 +44,10 @@ function displayProducts(){
 
                 if(err) throw err;
 
-                if(res.length === 0)
-                    console.log("No Products in catalog");
+                if(res.length === 0){
+                    console.log(Chalk.red("No Products in catalog"));
+                    askForOptions();
+                }
                 else{
                     var table = new Table({
                         //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
@@ -42,6 +68,7 @@ function displayProducts(){
             });
 }
 function askForOptions(){
+    console.log("\n")
     inquirer.prompt([{
         message:"What would you like to do?",
         name:"action",
@@ -61,29 +88,35 @@ function askForOptions(){
 }
 
 function displayProductSalesByDepartment(){
-    var query = "select department_id,departments.department_name,over_head_costs,sum(product_sales) AS total_product_sales,sum(product_sales)-over_head_costs AS total_profit";
-    query+= " from products inner join departments";
+    var query = "select department_id,departments.department_name,over_head_costs,case when sum(product_sales) is null then 0 else sum(product_sales) end AS total_product_sales,case when sum(product_sales) is null then 0 else sum(product_sales) end - over_head_costs AS total_profit";
+    query+= " from products right outer join departments";
     query+= " on departments.department_name = products.department_name";
     query+= " group by departments.department_name,department_id,over_head_costs";
     connection.query(query,function(err,res){
         if(err) throw err;
 
-        var table = new Table({
-            //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
-            head: ["Department ID", "Department Name", "Over Head Costs", "Product Sales ", "Total Profit"],
-            //These are just the width of the columns. Only mess with these if you want to change the cosmetics of our response
-            colWidths: [15, 20, 20, 17, 15]
-        });
-
-        //table is an Array, so you can `push`, `unshift`, `splice`
-        for (var i = 0; i < res.length; i++) {
-            table.push(
-                [res[i].department_id, res[i].department_name, res[i].over_head_costs, res[i].total_product_sales, res[i].total_profit],
-            );
+        if(res.length === 0){
+            console.log(Chalk.red("No department exists yet, select Add a department"))
+            askForOptions();
         }
-        console.log("\n"+table.toString());
+        else{
+            var table = new Table({
+                //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
+                head: ["Department ID", "Department Name", "Over Head Costs", "Product Sales ", "Profit"],
+                //These are just the width of the columns. Only mess with these if you want to change the cosmetics of our response
+                colWidths: [15, 20, 20, 17, 15]
+            });
 
-        askForOptions();
+            //table is an Array, so you can `push`, `unshift`, `splice`
+            for (var i = 0; i < res.length; i++) {
+                table.push(
+                    [res[i].department_id, res[i].department_name, res[i].over_head_costs, res[i].total_product_sales, res[i].total_profit],
+                );
+            }
+            console.log("\n"+table.toString());
+
+            askForOptions();
+        }
 
     });
 
@@ -93,21 +126,25 @@ function addNewDepartment(){
     connection.query("select * from departments",function(err,res){
         if(err) throw err;
 
-        var table = new Table({
-            //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
-            head: ["Department ID", "Department Name", "Over Head Costs"],
-            //These are just the width of the columns. Only mess with these if you want to change the cosmetics of our response
-            colWidths: [15, 20, 20]
-        });
-
-        //table is an Array, so you can `push`, `unshift`, `splice`
-        for (var i = 0; i < res.length; i++) {
-            table.push(
-                [res[i].department_id, res[i].department_name, res[i].over_head_costs],
-            );
+        if(res.length === 0){
+            console.log(Chalk.red("No department exists yet"));
         }
-        console.log("\n"+table.toString());
+        else{
+            var table = new Table({
+                //You can name these table heads chicken if you'd like. They are simply the headers for a table we're putting our data in
+                head: ["Department ID", "Department Name", "Over Head Costs"],
+                //These are just the width of the columns. Only mess with these if you want to change the cosmetics of our response
+                colWidths: [15, 20, 20]
+            });
 
+            //table is an Array, so you can `push`, `unshift`, `splice`
+            for (var i = 0; i < res.length; i++) {
+                table.push(
+                    [res[i].department_id, res[i].department_name, res[i].over_head_costs],
+                );
+            }
+            console.log("\n"+table.toString());
+        }
         inquirer.prompt([{
             message:"Which Department would you like to add?",
             name:"department_name",
@@ -139,6 +176,11 @@ function addNewDepartment(){
                 return true;
             }
         }]).then(function(answer){
+            console.log("================================")
+            console.log("Department: "+ answer.department_name)
+            console.log("Over Head Cost: "+ parseFloat(answer.overhead_cost))
+            console.log("================================")
+
             inquirer.prompt([{
                 message:"Are you sure you want to add the department?",
                 type:"confirm",
@@ -165,7 +207,7 @@ function insertNewDepartmentInDatabase(department_name, overhead_cost){
         over_head_costs:overhead_cost
     }],function(err,res){
         if(err) throw err;
-        console.log(department_name + " added to ShopStop!!\n")
+        console.log(Chalk.green.bold("Department "+department_name + " added to ShopStop!!\n"));
         askForOptions();
     });
 }
