@@ -141,6 +141,8 @@ customer.checkForStockSufficiency = function(productID,quantity){
             console.log("================================")
             console.log("Product: "+ res[0].product_name)
             console.log("Department: "+ res[0].department_name)
+            console.log("Quantity: "+ quantity);
+            console.log("Price/Unit: "+ res[0].price);
             console.log("Total Price: "+ (res[0].price * quantity).toFixed(2));
             console.log("================================\n")
 
