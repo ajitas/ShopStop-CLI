@@ -1,4 +1,4 @@
-insert into products(product_name, department_name, price, stock_quantity) values
+INSERT INTO products(product_name, department_name, price, stock_quantity) VALUES
 ("banana", "fresh produce", 0.79, 600),
 ("chicken", "meat", 10.00, 50 ),
 ("bread", "bakery", 4.99, 350),
@@ -13,7 +13,7 @@ insert into products(product_name, department_name, price, stock_quantity) value
 ("brownie bites","bakery",12.99,70),
 ("chicken broth","canned goods",9.99,140);
 
-insert into departments(department_name,over_head_costs) values 
+INSERT INTO departments(department_name,over_head_costs) VALUES 
 ("fresh produce",20),
 ("meat",100),
 ("bakery",10),
@@ -24,3 +24,15 @@ insert into departments(department_name,over_head_costs) values
 ("beverages",15),
 ("breakfast & cereal",70),
 ("canned goods",30);
+
+INSERT INTO managers(manager_name,manager_pwd) VALUES
+("Mike","manager1"),
+("Jake","manager2"),
+("Andy","manager3"),
+("Jimmy","manager4");
+
+INSERT INTO supervisors(supervisor_name,supervisor_pwd) VALUES
+("Brandon","supervisor1"),
+("John","supervisor2"),
+("Claire","supervisor3"),
+("Peter","supervisor4");
