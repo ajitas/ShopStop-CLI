@@ -110,7 +110,8 @@ function managerOptions(){
             Manager.connection.query("SELECT * FROM managers WHERE ?",
             {
                 manager_id:parseInt(answer.ManagerID)
-            },function(err,res){
+            },
+            function(err,res){
 
                 //if managerID is not present in the database table; end the connection and ask for ID again
                 if(res.length === 0){
@@ -140,7 +141,7 @@ function managerOptions(){
                         else{
                             console.log(Chalk.red("Incorrect Password"))
                             Manager.connection.end();
-                            askForRole();
+                            managerOptions();
                         }
                     });
                 }
@@ -210,7 +211,7 @@ function supervisorOptions(){
                         else{
                             console.log(Chalk.red("Incorrect Password"))
                             Supervisor.connection.end();
-                            askForRole();
+                            supervisorOptions();
                         }
                     });
                 }
