@@ -4,8 +4,14 @@
 ShopStop is a command line interface using mysql and node.js for customers, managers and supervisors of the store. It is a storefront that lets customers place their orders while keeping a track of the inventory. It lets managers see/update inventory or add new products. Supervisors can analyse the profit of each department and also add new departments. To run the application as a manager or supervisor, it takes an ID and password to authenticate the employee.
 
 ## Application Preview
+
+### Customer
 ![ShopStop-CLI-Customer](shopstop-customer.gif)
+
+### Manager
 ![ShopStop-CLI-Manager](shopstop-manager.gif)
+
+### Supervisor
 ![ShopStop-CLI-Supervisor](shopstop-supervisor.gif)
 
 ## Technologies used
@@ -43,6 +49,7 @@ price | DECIMAL(10,2) NOT NULL
 stock_quantity | INTEGER NOT NULL
 product_sales | DECIMAL(10,2) DEAFULT 0
 
+
 2. departments
 
 Column Name  | Type
@@ -51,6 +58,7 @@ department_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 department_name | VARCHAR(30) NOT NULL
 over_head_costs | DECIMAL(10,2) NOT NULL
 
+
 3. managers
 
 Column Name  | Type
@@ -58,6 +66,7 @@ Column Name  | Type
 manager_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 manager_name | VARCHAR(100) NOT NULL
 manager_pwd | VARCHAR(20) NOT NULL
+
 
 4. supervisors
 
