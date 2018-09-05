@@ -130,7 +130,9 @@ function managerOptions(){
                         //If password matches the password in the database, show welcome message and
                         //then show manager options to user for choosing option
                         if(res[0].manager_pwd === answer2.manager_password){
-                            console.log(Chalk.blue.bold("\nWelcome "+ res[0].manager_name+"!!"))
+                            console.log(Chalk.blue.bold("\n******************"))
+                            console.log(Chalk.blue.bold("Welcome "+ res[0].manager_name+"!!"))
+                            console.log(Chalk.blue.bold("******************\n"))
                             Manager.askForOptions();
                         }
                         //If password does not match the one stored in database, show Incorrect password message
@@ -198,7 +200,9 @@ function supervisorOptions(){
                         //If password matches the password in the database, show welcome message and
                         //then show supervisor options to user for choosing option
                         if(res[0].supervisor_pwd === answer2.supervisor_password){
-                            console.log(Chalk.blue.bold("\nWelcome "+ res[0].supervisor_name+"!!"))
+                            console.log(Chalk.blue.bold("\n******************"))
+                            console.log(Chalk.blue.bold("Welcome "+ res[0].supervisor_name+"!!"))
+                            console.log(Chalk.blue.bold("******************\n"))
                             Supervisor.askForOptions();
                         }
                         //If password does not match the one stored in database, show Incorrect password message
