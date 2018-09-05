@@ -1,3 +1,5 @@
+USE shopstop_db;
+
 INSERT INTO products(product_name, department_name, price, stock_quantity) VALUES
 ("banana", "fresh produce", 0.79, 600),
 ("chicken", "meat", 10.00, 50 ),

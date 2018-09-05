@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS shopstop_db;
 CREATE DATABASE shopstop_db;
 
 USE shopstop_db;
