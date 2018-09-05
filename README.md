@@ -49,7 +49,7 @@ price | DECIMAL(10,2) NOT NULL
 stock_quantity | INTEGER NOT NULL
 product_sales | DECIMAL(10,2) DEAFULT 0
 
-### departments
+### departments:
 
 Column Name  | Type
 ------------ | -------------
@@ -57,7 +57,7 @@ department_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 department_name | VARCHAR(30) NOT NULL
 over_head_costs | DECIMAL(10,2) NOT NULL
 
-### managers
+### managers:
 
 Column Name  | Type
 ------------ | -------------
@@ -65,7 +65,7 @@ manager_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 manager_name | VARCHAR(100) NOT NULL
 manager_pwd | VARCHAR(20) NOT NULL
 
-### supervisors
+### supervisors:
 
 Column Name  | Type
 ------------ | -------------
