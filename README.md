@@ -35,10 +35,10 @@ ShopStop is a command line interface using mysql and node.js for customers, mana
     * If user chooses to run the application as a supervisor, his supervisorID and password is required. 
     * "View Product sales by department" : Supervisor can see product sales and profit for each department.
     * "Add new department" : Takes department name and its over head cost from the supervisor. A summary of information is shown to the supervisor and once he confirms, the new department information is added to the database.
-    * Quit : The application exits execution.
+    * "Quit" : The application exits execution.
 
 ## Mysql Tables
-1. products:
+### products:
 
 Column Name  | Type
 ------------ | -------------
@@ -49,8 +49,7 @@ price | DECIMAL(10,2) NOT NULL
 stock_quantity | INTEGER NOT NULL
 product_sales | DECIMAL(10,2) DEAFULT 0
 
-
-2. departments
+### departments
 
 Column Name  | Type
 ------------ | -------------
@@ -58,8 +57,7 @@ department_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 department_name | VARCHAR(30) NOT NULL
 over_head_costs | DECIMAL(10,2) NOT NULL
 
-
-3. managers
+### managers
 
 Column Name  | Type
 ------------ | -------------
@@ -67,8 +65,7 @@ manager_id (Primary key) | INTEGER AUTO_INCREMENT NOT NULL
 manager_name | VARCHAR(100) NOT NULL
 manager_pwd | VARCHAR(20) NOT NULL
 
-
-4. supervisors
+### supervisors
 
 Column Name  | Type
 ------------ | -------------
@@ -119,11 +116,17 @@ The application will keep running as long as "Quit" is selected from the list at
 6. Open shopstop.js and change createConnection function's parameter in all 3 places. Replace the configuartion keys with your values.
 7. Inside ShopStop-CLI folder on terminal, type "node shopstop.js" on terminal. This will start application execution.
 
-## code snippets
+## Code snippets
 ```
 ```
 
 ## Learning points
+1. Using mysql package to interact with mysql server. This included creating connection, querying, using results in callback, ending connection.
+2. Using inquirer package in a recursive fashion for interactive application building.
+2. Using multiple packages like inquirer and mysql concurrently using callbacks to run the application without any unexpected program flow.
+3. Extracting data from mysql server using input sanitization.
+3. updating, inserting and deleting data from database through node cli.
+4. Using multiple packages like cfonts, chalk and cli-table for data formatting.
 
 
 ## Author 
