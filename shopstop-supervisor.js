@@ -174,7 +174,7 @@ supervisor.addNewDepartment = function(){
         }]).then(function(answer){
 
             //show summary to supervisor and ask for confirmation to add to database
-            console.log("================================")
+            console.log("\n================================")
             console.log("Department: "+ answer.department_name)
             console.log("Over Head Cost: "+ parseFloat(answer.overhead_cost))
             console.log("================================\n")

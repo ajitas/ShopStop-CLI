@@ -147,93 +147,95 @@ manager.addNewProduct = function(){
                 console.log(Chalk.red("No department exists yet, wait for supervisor to add new department\n"));
                 manager.askForOptions();
             }
-            //add all the department names to the array
-            for(var i =0;i<res2.length;i++)
-                departmentArray.push(res2[i].department_name);
+            else{
+                //add all the department names to the array
+                for(var i =0;i<res2.length;i++)
+                    departmentArray.push(res2[i].department_name);
 
-            //ask the manager about the new product he wants to add
-            inquirer.prompt([{
-                message:"Which Product would you like to add?",
-                name:"product_name",
-                type:"input",
-                validate: function(value){
-                    for(var i =0;i<res.length;i++){
-                        if(value.toLowerCase() === res[i].product_name.toLowerCase())
-                            return false;
-                    }
-                    return true;
-                }
-            },
-            {
-                message:"Which category would you like to add it to?",
-                name:"department",
-                type:"list",
-                choices:departmentArray
-            },
-            {
-                message:"How much does it cost?",
-                name:"price",
-                type:"input",
-                validate: function(value){
-                    var decimalPlace = value.indexOf(".");
-                    //if there is no decimal, then all the characters should be integer
-                    if(decimalPlace === -1){
-                        for(var i =0;i<value.length;i++)
-                            if(isNaN(parseInt(value[i]))) 
-                                return false;
-                    }
-                    //if there is a decimal, then the part before and after should have all characters as digit
-                    else{
-                        var integerPart = value.slice(0,decimalPlace);
-                        var decimalPart = value.slice(decimalPlace+1)
-                        //if we have more than 2 digits after decimal
-                        if(decimalPart.length>2)
-                            return false;
-                        for(var i =0;i<integerPart.length;i++)
-                            if(isNaN(parseInt(integerPart[i]))) 
-                                return false;
-                        for(var i =0;i<decimalPart.length;i++)
-                            if(isNaN(parseInt(decimalPart[i]))) 
-                                return false;
-                    }
-                    return true;
-                }
-            },
-            {
-                message:"How many do we have?",
-                name:"stock",
-                type:"input",
-                validate: function(value){
-                    for(var i =0;i<value.length;i++)
-                        if(isNaN(parseInt(value[i]))) return false;
-                    return true;
-                }
-            }]).then(function(answer){
-                    
-                //display the information before asking manager for confirmation to add new product
-                console.log("================================")
-                console.log("Product: "+ answer.product_name)
-                console.log("Department: "+ answer.department)
-                console.log("Price: "+ parseFloat(answer.price).toFixed(2))
-                console.log("Stock: "+ parseInt(answer.stock));
-                console.log("================================\n")
-
-                //ask the manager for confirmation to add new product to database
+                //ask the manager about the new product he wants to add
                 inquirer.prompt([{
-                    message:"Are you sure you want to add the product?",
-                    type:"confirm",
-                    name:"doAdd",
-                    default:false
-                }]).then(function(answer2){
+                    message:"Which Product would you like to add?",
+                    name:"product_name",
+                    type:"input",
+                    validate: function(value){
+                        for(var i =0;i<res.length;i++){
+                            if(value.toLowerCase() === res[i].product_name.toLowerCase())
+                                return false;
+                        }
+                        return true;
+                    }
+                },
+                {
+                    message:"Which category would you like to add it to?",
+                    name:"department",
+                    type:"list",
+                    choices:departmentArray
+                },
+                {
+                    message:"How much does it cost?",
+                    name:"price",
+                    type:"input",
+                    validate: function(value){
+                        var decimalPlace = value.indexOf(".");
+                        //if there is no decimal, then all the characters should be integer
+                        if(decimalPlace === -1){
+                            for(var i =0;i<value.length;i++)
+                                if(isNaN(parseInt(value[i]))) 
+                                    return false;
+                        }
+                        //if there is a decimal, then the part before and after should have all characters as digit
+                        else{
+                            var integerPart = value.slice(0,decimalPlace);
+                            var decimalPart = value.slice(decimalPlace+1)
+                            //if we have more than 2 digits after decimal
+                            if(decimalPart.length>2)
+                                return false;
+                            for(var i =0;i<integerPart.length;i++)
+                                if(isNaN(parseInt(integerPart[i]))) 
+                                    return false;
+                            for(var i =0;i<decimalPart.length;i++)
+                                if(isNaN(parseInt(decimalPart[i]))) 
+                                    return false;
+                        }
+                        return true;
+                    }
+                },
+                {
+                    message:"How many do we have?",
+                    name:"stock",
+                    type:"input",
+                    validate: function(value){
+                        for(var i =0;i<value.length;i++)
+                            if(isNaN(parseInt(value[i]))) return false;
+                        return true;
+                    }
+                }]).then(function(answer){
+                        
+                    //display the information before asking manager for confirmation to add new product
+                    console.log("\n================================")
+                    console.log("Product: "+ answer.product_name)
+                    console.log("Department: "+ answer.department)
+                    console.log("Price: "+ parseFloat(answer.price).toFixed(2))
+                    console.log("Stock: "+ parseInt(answer.stock));
+                    console.log("================================\n")
 
-                    //if manager confirms positively, insert the information into database
-                    if(answer2.doAdd)
-                        manager.insertNewProductToDatabase(answer.product_name.toLowerCase(),answer.department, parseFloat(answer.price).toFixed(2), parseInt(answer.stock));
-                    //If manager confrims negatively, go back to showing options of what he wants to do
-                    else
-                        manager.askForOptions();
-                }); 
-            });
+                    //ask the manager for confirmation to add new product to database
+                    inquirer.prompt([{
+                        message:"Are you sure you want to add the product?",
+                        type:"confirm",
+                        name:"doAdd",
+                        default:false
+                    }]).then(function(answer2){
+
+                        //if manager confirms positively, insert the information into database
+                        if(answer2.doAdd)
+                            manager.insertNewProductToDatabase(answer.product_name.toLowerCase(),answer.department, parseFloat(answer.price).toFixed(2), parseInt(answer.stock));
+                        //If manager confrims negatively, go back to showing options of what he wants to do
+                        else
+                            manager.askForOptions();
+                    }); 
+                });
+            }
         });
     });
 }
@@ -335,7 +337,7 @@ manager.addInventory = function(){
                         }]).then(function(answer2){
 
                             //show message to the manager and ask for confirmation
-                            console.log("================================")
+                            console.log("\n================================")
                             console.log("Product: "+ res[0].product_name)
                             console.log("Added Inventory: "+ parseInt(answer2.quantity));
                             console.log("================================\n")

@@ -138,7 +138,7 @@ customer.checkForStockSufficiency = function(productID,quantity){
             var newProductSale = res[0].product_sales + res[0].price * quantity;
 
             //show the order summary
-            console.log("================================")
+            console.log("\n================================")
             console.log("Product: "+ res[0].product_name)
             console.log("Department: "+ res[0].department_name)
             console.log("Quantity: "+ quantity);
