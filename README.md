@@ -25,6 +25,7 @@ ShopStop is a command line interface using mysql and node.js for customers, mana
 
 2. Manager
     * If user chooses to run the application as a manager, his managerID and password is required. 
+    (It can be found in managers table. One can also see it in seeds.sql file)
     * "View Products for sale" : Displays a list of products available in the store along with their IDs, prices, departments and stock available.
     * "View low inventory" : Displays a list of products in the store that have low inventory (less than 5), along with their IDs, prices, departments and stock available.
     * "Add inventory" : Takes the ID of the product that manager wants to add inventory for. It then asks how many items does the manager want to add. Once all the validation is done, a summary is shown to manager. Once he confirms, the new inventory is reflected in the database.
@@ -33,6 +34,7 @@ ShopStop is a command line interface using mysql and node.js for customers, mana
 
 3. Supervisor
     * If user chooses to run the application as a supervisor, his supervisorID and password is required. 
+    (It can be found in supervisors table. One can also see it in seeds.sql file)
     * "View Product sales by department" : Supervisor can see product sales and profit for each department.
     * "Add new department" : Takes department name and its over head cost from the supervisor. A summary of information is shown to the supervisor and once he confirms, the new department information is added to the database.
     * "Quit" : The application exits execution.
@@ -105,16 +107,16 @@ supervisor_pwd | VARCHAR(20) NOT NULL
     * For more information : [cli-table](https://www.npmjs.com/package/cli-table)
 
 ## Inquirer interaction
-The application will keep running as long as "Quit" is selected from the list at any stage. Once the user starts running the application taking a role of either customer, manager or supervisor, he can't change the role without exiting the application.
+The application will keep running as long as "Quit" is selected from the list at any stage. Once the user starts running the application taking a role of either customer, manager or supervisor, he can't change the role without exiting the application. To use the application as Manager or Supervisor, user needs to provide ID and password to the inquirer (It can be found in managers and supervisors tables. One can also see it in seeds.sql file)
 
 ## Execution steps
 1. Make sure node is installed on your machine. You can visit the website [Node Installation](http://blog.teamtreehouse.com/install-node-js-npm-mac) for instructions.
 2. Download/Clone the respository.
 3. Navigate on terminal to the ShopStop-CLI. Inside the folder, type "npm install". This will take all dependencies from package.json and install all the required packages to run the application.
 4. Make sure mysql is installed on the localhost/other server. 
-5. Log into mysql and execute schema.sql followed by seeds.sql from the repository.
+5. Log into mysql workbench and execute schema.sql followed by seeds.sql from the repository.
 6. Open shopstop.js and change createConnection function's parameter in all 3 places. Replace the configuartion keys with your values.
-7. Inside ShopStop-CLI folder on terminal, type "node shopstop.js" on terminal. This will start application execution.
+7. Inside ShopStop-CLI folder on terminal, type "node shopstop.js" on terminal. This will start application execution. To use the application as Manager or Supervisor, user needs to provide ID and password that can be found in managers and supervisors tables. One can also see it in seeds.sql file.
 
 ## Code snippets
 ### Customer
