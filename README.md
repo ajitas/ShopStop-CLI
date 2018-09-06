@@ -432,7 +432,7 @@ manager.connection.query("INSERT INTO products SET ?",
 ```
 Once the manager confirms positively to add new product, the details are inserted in products table.
 
-###Supervisor
+### Supervisor
 1. SupervisorID validation
 ```
 //once connected ask the supervisor to enter his ID
