@@ -39,6 +39,9 @@ ShopStop is a command line interface using mysql and node.js for customers, mana
     * "Add new department" : Takes department name and its over head cost from the supervisor. A summary of information is shown to the supervisor and once he confirms, the new department information is added to the database.
     * "Quit" : The application exits execution.
 
+4. Quit
+    * The application exits execution.
+
 ## Mysql Tables
 ### products:
 
